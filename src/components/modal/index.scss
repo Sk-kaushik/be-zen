@@ -1,0 +1,83 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  box-shadow: 5px 5px 10px rgba(145, 145, 145, 0.658);
+  // padding: 20px;
+}
+
+.modal-success {
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+  h2 {
+    color: blue;
+  }
+  button {
+    width: 100px;
+    margin: 40px auto 0;
+  }
+}
+
+.modal-error {
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+  h2 {
+    color: red;
+  }
+  button {
+    width: 100px;
+    margin: 40px auto 0;
+  }
+}
+
+.modal-confirm {
+  min-width: 350px;
+  max-width: 450px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  .modal-header {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ececec;
+    font-size: 14px;
+  }
+
+  .content {
+    padding: 10px 20px;
+    h2 {
+      font-size: 20px;
+      font-weight: 500;
+      color: #000;
+    }
+    p {
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  }
+
+  button {
+    width: 100px;
+  }
+
+  .btn-wrapper {
+    padding: 10px 20px 15px;
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+    button:first-child {
+      margin-right: 15px;
+    }
+  }
+}

@@ -1,0 +1,25 @@
+@import '../../_colors';
+
+.empty-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  i {
+    font-size: 80px;
+    color: $light-text;
+  }
+  h2 {
+    color: $light-text;
+  }
+  p {
+    width: 70%;
+    margin-top: 10px;
+    text-align: center;
+    color: $light-text;
+  }
+}
