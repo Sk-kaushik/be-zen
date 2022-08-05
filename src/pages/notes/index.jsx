@@ -9,6 +9,8 @@ import EmptyContainer from '../../components/empty';
 
 import { findById, orderByPinned } from '../../helper/helper-method';
 import { addNoteToDb, deleteNoteFromDb, getAllNotesFromDb, updateNoteInDb, searchNoteInDb } from '../../helper/firebase-helper';
+import { noteReducer } from '../../helper/note-reducer';
+import Paginate from '../../components/paginate';
 
 const MAX_NOTES_TO_SHOW = 6;
 
@@ -35,9 +37,7 @@ const Notes = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.type]);
 
-  useEffect(() => {
-    console.log('render again');
-  }, []);
+  const totalPageCount = Math.ceil(listSize / MAX_NOTES_TO_SHOW);
 
   const exitOnEsc = (event) => {
     if (event.key === 'Escape') {
@@ -189,7 +189,7 @@ const Notes = (props) => {
       getAllNotes('back');
     }
 
-    if (operation === 'next' && currentPage < Math.ceil(listSize / MAX_NOTES_TO_SHOW)) {
+    if (operation === 'next' && currentPage < totalPageCount) {
       setCurrentPage(currentPage + 1);
       getAllNotes('next');
     }
@@ -198,10 +198,13 @@ const Notes = (props) => {
   const mainHeaderProps = { addBtnClickHandler, searchString, searchHandler };
   const formProps = { formData, closeForm, inputChangeHandler, saveNote, updateNote };
   const modalProps = { modalClickHandler, ...showModal };
+  const paginateProps = { paginate, currentPage, totalPageCount };
 
   return (
     <div className="notes-wrapper">
-      <div className="notes-wrapper__header">{props.type === 'pinned' ? null : <MainHeader {...mainHeaderProps} />}</div>
+      <div className="notes-wrapper__header">
+        <MainHeader {...mainHeaderProps} />
+      </div>
 
       <section className="cards-grid-container">
         {allNotes.length > 0 && !loading ? (
@@ -217,31 +220,12 @@ const Notes = (props) => {
         )}
       </section>
 
-      {allNotes.length > 0 && !searchString && (
-        <div className="pagination">
-          <button
-            disabled={currentPage === 1}
-            className="prev-btn"
-            onClick={() => {
-              paginate('prev');
-            }}>
-            <i className="bx bx-left-arrow-alt"></i>
-            <span> Back</span>{' '}
-          </button>
-          <button
-            disabled={currentPage === Math.ceil(listSize / MAX_NOTES_TO_SHOW)}
-            className="next-btn"
-            onClick={() => {
-              paginate('next');
-            }}>
-            <span>Next</span>
-            <i className="bx bx-right-arrow-alt"></i>
-          </button>
-        </div>
-      )}
+      {allNotes.length > 0 && !searchString && <Paginate {...paginateProps} />}
 
       {loading && <Modal type="loading" overlayColor="rgba(255, 255, 255, 0.877)" />}
+
       {showForm && <Modal type="form" {...formProps} />}
+
       {showModal && <Modal overlayColor="rgba(255, 255, 255, 0.877)" {...modalProps} />}
     </div>
   );
@@ -249,6 +233,7 @@ const Notes = (props) => {
 
 const MainHeader = (props) => {
   const { addBtnClickHandler, searchString, searchHandler } = props;
+
   return (
     <>
       <div className="input-container">
@@ -257,31 +242,6 @@ const MainHeader = (props) => {
       <Button onClick={addBtnClickHandler}> Add Note </Button>
     </>
   );
-};
-
-const noteReducer = (state, action) => {
-  switch (action.type) {
-    case 'title':
-      return { ...state, title: action.payload };
-
-    case 'tagline':
-      return { ...state, tagline: action.payload };
-
-    case 'body':
-      return { ...state, body: action.payload };
-
-    case 'pin':
-      return { ...state, pinned: !state.pinned };
-
-    case 'reset':
-      return { title: '', tagline: '', body: '', pinned: false };
-
-    case 'update':
-      return action.payload;
-
-    default:
-      return state;
-  }
 };
 
 export default Notes;

@@ -8,8 +8,8 @@ export const filterById = (id, list, type = 'no-match') => {
   return type === 'match' ? list.filter((item) => item.id === id) : list.filter((item) => item.id !== id);
 };
 
-export const generateCurrentTime = () => {
-  return dayjs().format('DD MMM YYYY HH:mm');
+export const generateCurrentTime = (date) => {
+  return date ? dayjs(date).format('DD MMM YYYY HH:mm') : dayjs().format();
 };
 
 export const orderByPinned = (list) => {

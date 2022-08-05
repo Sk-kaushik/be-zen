@@ -1,0 +1,76 @@
+@import '../../_colors';
+
+.pagination {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 20px;
+  .page-count{
+    margin: 0 20px;
+    color: $dark-text;
+  }
+}
+
+.next-btn,
+.prev-btn {
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  background: $primary;
+  border: none;
+  outline: none;
+  color: white;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: 0.5s !important;
+
+  &:disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+    background: #999999;
+  }
+
+  i {
+    width: 0;
+    transition: 0.5s !important;
+  }
+  span {
+    transition: 0.3s !important;
+  }
+}
+
+.next-btn {
+  i {
+    transform: translateX(80px);
+  }
+  &:hover {
+    span {
+      transform: translateX(-80px);
+    }
+    i {
+      width: auto;
+      transform: translateX(-14px);
+    }
+  }
+}
+
+.prev-btn {
+  i {
+    transform: translateX(-80px);
+  }
+  &:hover {
+    span {
+      transform: translateX(80px);
+    }
+    i {
+      width: auto;
+      transform: translateX(16px);
+    }
+  }
+}

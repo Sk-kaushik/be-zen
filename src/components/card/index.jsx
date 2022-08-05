@@ -1,4 +1,5 @@
 import React from 'react';
+import { generateCurrentTime } from '../../helper/helper-method';
 import './index.scss';
 
 const Card = (props) => {
@@ -24,14 +25,14 @@ const Card = (props) => {
       <div className="footer">
         <div className="time-created">
           <p>
-            <span>Created On: </span> {created_on ?? '--'}
+            <span>Created On: </span> {generateCurrentTime(created_on)}
           </p>
         </div>
 
         <div className="time-edited">
           {updated_on && (
             <p>
-              <span>Edited On: </span> {updated_on}
+              <span>Edited On: </span> {generateCurrentTime(updated_on)}
             </p>
           )}
         </div>
