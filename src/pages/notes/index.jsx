@@ -8,7 +8,7 @@ import Modal from '../../components/modal';
 import EmptyContainer from '../../components/empty';
 
 import { findById, orderByPinned } from '../../helper/helper-method';
-import { addNoteToDb, deleteNoteFromDb, getAllNotesFromDb, updateNoteInDb, searchNoteInDb, getPinnedNotesFromDb } from '../../helper/firebase-helper';
+import { addNoteToDb, deleteNoteFromDb, getAllNotesFromDb, updateNoteInDb, searchNoteInDb } from '../../helper/firebase-helper';
 
 const MAX_NOTES_TO_SHOW = 6;
 
@@ -53,28 +53,16 @@ const Notes = (props) => {
     setShowForm(false);
     dispatchForm({ type: 'reset' });
 
-    if (props.type === 'pinned') {
-      getPinnedNotesFromDb().then((res) => {
-        setLoading(false);
-        if (res.length > 0) {
-          const orderedList = orderByPinned(res);
-          setAllNotes(orderedList);
-        } else {
-          setAllNotes([]);
-        }
-      });
-    } else {
-      getAllNotesFromDb(MAX_NOTES_TO_SHOW, operation).then((res) => {
-        setLoading(false);
-        if (res.data.length > 0) {
-          const orderedList = orderByPinned(res.data);
-          setAllNotes(orderedList);
-          setListSize(res.size);
-        } else {
-          setAllNotes([]);
-        }
-      });
-    }
+    getAllNotesFromDb(MAX_NOTES_TO_SHOW, operation).then((res) => {
+      setLoading(false);
+      if (res.data.length > 0) {
+        const orderedList = orderByPinned(res.data);
+        setAllNotes(orderedList);
+        setListSize(res.size);
+      } else {
+        setAllNotes([]);
+      }
+    });
   };
 
   const saveNote = () => {
@@ -105,6 +93,8 @@ const Notes = (props) => {
 
     updateNoteInDb(modifiedNote).then((res) => {
       if (res.message) {
+        setCurrentPage(1);
+        setSearchString('');
         return getAllNotes();
       }
 
@@ -132,8 +122,8 @@ const Notes = (props) => {
 
     setShowModal({
       type: 'confirm',
-      heading: `Do you want to delete? ${note.title}`,
-      message: `This action is irreversable.`,
+      heading: `Do you want to delete ${note.title}?`,
+      message: `This action is irreversable!`,
       cancelHandler: modalClickHandler,
       confirmHandler,
       note,
@@ -193,6 +183,18 @@ const Notes = (props) => {
     });
   };
 
+  const paginate = (operation) => {
+    if (operation === 'prev' && currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+      getAllNotes('back');
+    }
+
+    if (operation === 'next' && currentPage < Math.ceil(listSize / MAX_NOTES_TO_SHOW)) {
+      setCurrentPage(currentPage + 1);
+      getAllNotes('next');
+    }
+  };
+
   const mainHeaderProps = { addBtnClickHandler, searchString, searchHandler };
   const formProps = { formData, closeForm, inputChangeHandler, saveNote, updateNote };
   const modalProps = { modalClickHandler, ...showModal };
@@ -221,10 +223,7 @@ const Notes = (props) => {
             disabled={currentPage === 1}
             className="prev-btn"
             onClick={() => {
-              if (currentPage > 1) {
-                setCurrentPage((prev) => prev - 1);
-                getAllNotes('back');
-              }
+              paginate('prev');
             }}>
             <i className="bx bx-left-arrow-alt"></i>
             <span> Back</span>{' '}
@@ -233,11 +232,7 @@ const Notes = (props) => {
             disabled={currentPage === Math.ceil(listSize / MAX_NOTES_TO_SHOW)}
             className="next-btn"
             onClick={() => {
-              console.log(allNotes.length);
-              if (currentPage < Math.ceil(listSize / MAX_NOTES_TO_SHOW)) {
-                setCurrentPage(currentPage + 1);
-                getAllNotes('next');
-              }
+              paginate('next');
             }}>
             <span>Next</span>
             <i className="bx bx-right-arrow-alt"></i>
